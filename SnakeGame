@@ -1,0 +1,184 @@
+import javax.swing.*; // Importing Swing components for GUI
+import java.awt.*; // Importing AWT components for drawing
+import java.awt.event.KeyEvent; // Importing KeyEvent for handling keyboard input
+import java.awt.event.KeyListener; // Importing KeyListener for listening to key events
+import java.util.ArrayList; // Importing ArrayList for storing the snake's body parts
+import java.util.Random; // Importing Random for generating random positions
+
+import javax.swing.JFrame;
+
+public class Snake extends JFrame implements KeyListener {
+
+
+	JFrame frame = new JFrame("Snake Game");
+	
+
+    public static int Initial_snake_height = 5;
+    public static int speed = 180; //In milliseconds
+	static int BOARD_HEIGHT = 600;
+	static int BOARD_WIDTH = 600;
+	private static final int UNIT_SIZE = 30;
+    private static final int GAME_UNITS = (BOARD_WIDTH * BOARD_HEIGHT) / (UNIT_SIZE * UNIT_SIZE);
+
+
+    public ArrayList<Integer> snakeX; //Will hold the snakes body components
+    public ArrayList<Integer> snakeY;
+    public Point snakeDirection;
+    public boolean gameover;
+    public int score;
+    public boolean running = false;
+    public int foodX;
+    public int foodY;
+	
+    
+    public Snake() {
+    	setTitle("Snake Game"); // Set the title of the window
+        setSize(600, 600); // Set the size of the window
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Exit application when window is closed
+        setLocationRelativeTo(null); // Center the window on the screen
+        setResizable(false); // Prevent resizing the window
+		snakeX = new ArrayList();
+		snakeY = new ArrayList();
+		Point Direction = snakeDirection;	
+		running = true;
+		frame.setBackground(Color.GREEN);
+
+    }
+
+	public void intializegame() {
+		int IntialX = BOARD_WIDTH/2;
+		int IntialY = BOARD_HEIGHT/2;
+		int InitalSnakeHeight = 5;
+		int appelSize = 5;
+		for (int i=0; i > 0; i++) {
+			
+		}
+	}
+	
+	private void startGame() {
+		
+		placefood();
+        while (!gameover) { // Loop until the game is over
+            try {
+                Thread.sleep(speed); // Pause for a short period
+            } catch (InterruptedException e) {
+                e.printStackTrace(); // Print the stack trace if an exception occurs
+            }
+            //movesnake(); // Move the snake
+            checkCollision(); // Check for collisions
+            if (!gameover) {
+                repaint(); // Update the screen
+            }
+        }
+        gameover(); // Handle game over
+    }
+	public void drawgame(Graphics g) {
+		
+		g.setColor(Color.RED); // Drawing the apple
+		g.fillOval(foodX, foodY, UNIT_SIZE, UNIT_SIZE);
+
+	}
+    public void gameover() {
+		
+    }
+	private void checkCollision() {
+		int headX = snakeX.get(0);
+		int headY = snakeY.get(0);
+		if(headX <= 0 || headX >= BOARD_WIDTH || headY > 0 || headY <= BOARD_HEIGHT) // Check boundary collsion
+		{
+			gameover = true;
+		}
+		for (int i = 1; i < snakeX.size(); i++) {// Check self collsion
+			for (int j = 0; j < snakeY.size(); j++) {
+				if (headX == snakeX.get(i) || headY == snakeY.get(i)) { 
+				gameover = true; 
+				break;
+			}
+				
+			}
+		}
+			
+	}
+    public void placefood() {
+    	Random rand = new Random();
+    	 // randomly placing the apple
+    	foodX = rand.nextInt((int)(BOARD_WIDTH/UNIT_SIZE))*UNIT_SIZE;
+    	foodY = rand.nextInt((int)(BOARD_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
+    }
+	
+
+	public void movesnake() {
+		int headX = snakeX.get(0);
+		int headY = snakeY.get(0);
+		Point newHead = new Point (head);
+		switch(snakeDirection) {
+			case UP:
+			newHead.y++;
+			break;
+		
+			case DOWN:
+			newHead.y--;
+			
+			case LEFT:
+			newHead.x--;
+			
+			case RIGHT:
+			newHead.x++;
+		}
+		snake.add(0,newHead);
+		if (!newHead.equals(foodPosition)){
+			snake.remove(snake.size()-1);
+		}
+		else {
+			score++;
+			placefood();
+		}
+		
+		
+	}
+	
+		
+ 
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		switch (e.getKeyCode()) { // Change the direction of the snake based on the key pressed
+		case KeyEvent.VK_UP:
+		if (snakeDirection != Direction.DOWN) // Prevent the snake from reversing
+		snakeDirection = Direction.UP;
+		break;
+		case KeyEvent.VK_DOWN:
+		if (snakeDirection != Direction.UP)
+		snakeDirection = Direction.DOWN;
+		break;
+		case KeyEvent.VK_LEFT:
+		if (snakeDirection != Direction.RIGHT)
+		snakeDirection = Direction.LEFT;
+		break;
+		case KeyEvent.VK_RIGHT:
+		if (snakeDirection != Direction.LEFT)
+		snakeDirection = Direction.RIGHT;
+		break;
+	}
+
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	enum Direction {
+		UP, DOWN, LEFT, RIGHT
+	}	
+	
+	public static void main(String[] args){
+        new Snake();
+    }
+
+}
