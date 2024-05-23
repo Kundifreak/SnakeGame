@@ -1,0 +1,38 @@
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+import javax.swing.JPanel;
+
+public class SnakePanel extends JPanel {
+	
+	boolean [][] cells;
+	double width;
+	double height;
+	
+	public SnakePanel(boolean[][] in) {
+		cells = in;
+	}
+	
+	public void setCells(boolean[][]newcells) {
+		cells = newcells;
+	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		width = (double)this.getWidth() / cells[0].length;
+		height = (double)this.getHeight() / cells[0].length;
+		
+		
+		//draw the grid
+		g.setColor(Color.BLACK);
+		for (int x = 0; x < cells[0].length+1; x++) {
+			g.drawLine((int)Math.round(x*width),0,(int)Math.round(x*width),this.getHeight());	
+		}
+		for (int y = 0; y < cells.length+1; y++) {
+			g.drawLine(0,(int)(Math.round(y*height)),this.getWidth(),(int)(Math.round(y*height)));	
+		}
+		
+		
+	}
+}
